@@ -1,5 +1,6 @@
 export function createProject(title, entries = []){
         projectManager.addProject(title)
+        projectManager.addProjectEntries(entries)
 
         function getTitle(){
             return title

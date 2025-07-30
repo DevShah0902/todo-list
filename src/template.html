@@ -3,10 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo List</title>
+    <title>Just Do It</title>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-</head>
+   </head>
 <body>
-    
+    <div class="container">
+        <header>
+            <h1>Just Do It!</h1>
+        </header>
+        
+        <div class="content">
+            <div class="projects-bar">
+                <h2>Projects</h2>
+                <div class="projects"></div>
+            </div>
+            <div class = "entries-bar">
+                <h2>All Entries</h2>
+                <div class="entries"></div>
+            </div>
+        </div>
+
+        <dialog id="entry-modal">
+            <form action="" id="entry-form">
+                <legend>Enter Entry Information</legend>
+               <label for="entry-title">Task<input type="text" id="entry-title"></label>
+               <label for="entry-description">Description<input type="text" id="entry-description"></label>
+            
+               <label for="entry-due-date">Due Date<input type="date" id="entry-due-date"></label>
+               <button type="submit" id="submit-entry">Add</button>
+            </form>
+        </dialog>
+
+        </div>
+        <footer>Dev Project Sites &copy; 2025</footer>
+    </div>
 </body>
 </html>

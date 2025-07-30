@@ -21,10 +21,23 @@ module.exports = {
             template: "./src/template.html"
         })
     ],
-    module:{
-        rules:[{
-            test: /\.css%/i,
-            use: ["style-loader", "css-loader"],
-        }]
-    }
+     module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf|svg)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/fonts/[name][ext]',
+        },
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: "asset/resource",
+      }
+    ],
+  },
 }
