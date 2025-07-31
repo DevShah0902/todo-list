@@ -1,31 +1,28 @@
+
 const defaultProject = createProject("Work")
-const entry1 = entryObject("wash dishes", "for dad", "tmrw")
-defaultProject.addEntry(entry1)
-const entry2 = entryObject("wash dishes", "for dad", "tmrw")
+const entry1 = entryObject("finish project", "code", "1/23/43")
+const entry2 = entryObject("send email", "to boss", "8/9/29")
 defaultProject.addEntry(entry2)
-const entry3 = entryObject("wash dishes", "for dad", "tmrw")
+const entry3 = entryObject("organize esk", "immediatly", "tmrw")
 defaultProject.addEntry(entry3)
-const entry4 = entryObject("wash dishes", "for dad", "tmrw")
+const entry4 = entryObject("buy toys", "weeee", "now")
 defaultProject.addEntry(entry4)
+const entryModal = document.querySelector("#entry-modal")
+const addMore = document.createElement('button')
 
-
-const newProject = createProject("New")
-const entryA = entryObject("wash dishes", "for dad", "tmrw")
-newProject.addEntry(entryA)
 
 const Display = (function(){
     const projectsBar = document.querySelector('.projects')
     const entriesBar = document.querySelector('.entries')
-    let currentProject = defaultProject
-
+    let currentProject;
     function renderProjects(){
 
         createViewAll()
 
-        const allProjects = projectManager.getProjects()
-        const allProjectEntries = projectManager.getProjectEntries()
+        const allProjects = projectManager.getProjectObjects()
+        
         for(let i=0; i < allProjects.length; i++){
-            createProject(allProjects[i], allProjectEntries[i])
+            createProject(allProjects[i])
         }
 
         createAddProject()
@@ -61,18 +58,17 @@ const Display = (function(){
         })
     }
 
-    function createProject(project, projectEntries){
+    function createProject(project){
         const projectDisplay = document.createElement('button')
         projectDisplay.classList.add("project")
-        projectDisplay.textContent = project
+        projectDisplay.textContent = project.getTitle()
         console.log(project)
         projectsBar.appendChild(projectDisplay)
         
         projectDisplay.addEventListener('click', () => {
-            changeCurrentProject(projectEntries)
+            changeCurrentProject(project)
             clearEntries()
-            console.log([projectEntries])
-            renderEntries(projectEntries)
+            renderEntries(project.getEntries())
             createAddEntry()
         })
     }
@@ -117,13 +113,16 @@ const Display = (function(){
         entriesBar.appendChild(addMore)
 
 
-        const entryModal = document.querySelector("#entry-modal")
+        
         addMore.addEventListener('click',() => {
-            const entryModal = document.querySelector("#entry-modal")
+    
             entryModal.showModal()
         })
 
-        const entryForm = document.querySelector("#entry-form")
+        
+    }   
+
+    const entryForm = document.querySelector("#entry-form")
         const nameInput = document.querySelector("#entry-title")
         const descriptionInput = document.querySelector("#entry-description")
         const dueDateInput = document.querySelector("#entry-due-date")
@@ -139,13 +138,12 @@ const Display = (function(){
             console.log(newEntry)
             entryModal.close()
             
+            currentProject = getCurrentProject()
+            currentProject.addEntry(newEntry)
             clearEntries()
-            getCurrentProject().push(newEntry)
-            renderEntries(getCurrentProject())
+            renderEntries(currentProject.getEntries())
             createAddEntry()
-            
         })
-    }   
 
     function createAddProject(){
         const addProject = document.createElement('button')
@@ -166,11 +164,19 @@ const Display = (function(){
     return{
         renderProjects,
         renderEntries,
-        createAddEntry
+        createAddEntry,
+        getCurrentProject
         
     }
 
 })()
+
+const newProject = createProject("New")
+const entryA = entryObject("wash dishes", "for dad", "tmrw")
+newProject.addEntry(entryA)
+
+projectManager.addProjectObject(defaultProject)
+projectManager.addProjectObject(newProject)
 
 Display.renderEntries(defaultProject)
 Display.renderProjects()

@@ -14,11 +14,13 @@ export function createProject(title, entries = []){
             entries.push(newEntry)
         }
 
-        return{
+        const project = {
             getTitle,
             getEntries,
             addEntry,
         }
+
+        return project
     }
 
 import { manageProjects, projectManager } from "./manage-projects"

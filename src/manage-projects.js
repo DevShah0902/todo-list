@@ -1,3 +1,5 @@
+const projectObjects = []
+
 const projectManager = function manageProjects() {
     const projects = []
     const projectEntries = []
@@ -18,11 +20,21 @@ const projectManager = function manageProjects() {
         projectEntries.push(entries)
     }
 
+    function getProjectObjects(){
+        return projectObjects
+    }
+
+    function addProjectObject(project){
+        projectObjects.push(project)
+    }
+
     return {
         getProjects,
         addProject,
         addProjectEntries,
-        getProjectEntries
+        getProjectEntries,
+        getProjectObjects,
+        addProjectObject
     }   
 }()
 
