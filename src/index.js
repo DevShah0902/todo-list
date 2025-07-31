@@ -1,20 +1,16 @@
 
-const defaultProject = createProject("Work")
+const defaultProject =projectObject("Work")
 const entry1 = entryObject("finish project", "code", "1/23/43")
-const entry2 = entryObject("send email", "to boss", "8/9/29")
-defaultProject.addEntry(entry2)
-const entry3 = entryObject("organize esk", "immediatly", "tmrw")
-defaultProject.addEntry(entry3)
-const entry4 = entryObject("buy toys", "weeee", "now")
-defaultProject.addEntry(entry4)
-const entryModal = document.querySelector("#entry-modal")
-const addMore = document.createElement('button')
+
 
 
 const Display = (function(){
     const projectsBar = document.querySelector('.projects')
     const entriesBar = document.querySelector('.entries')
-    let currentProject;
+    let currentProject = defaultProject;
+    let inViewAll = true;
+    const entryModal = document.querySelector("#entry-modal")
+    const editModal = document.querySelector("#edit-modal")
     function renderProjects(){
 
         createViewAll()
@@ -29,15 +25,27 @@ const Display = (function(){
     }
 
     function renderEntries(projectEntries){
-
+        projectDisplay()
         for(let i=0; i < projectEntries.length; i++) {
             createEntry(projectEntries[i])
         }
         
     }
 
+    function viewAllEntries(){
+        const everyProject = projectManager.getProjectEntries()
+            for (let i = 0; i < everyProject.length; i++) {
+                renderEntries(everyProject[i])
+                
+            }
+    }
+
     function clearEntries(){
         entriesBar.textContent = ""
+    }
+
+    function clearProjects(){
+        projectsBar.textContent = ""
     }
     function createViewAll() {
         const viewAll = document.createElement("button")
@@ -46,23 +54,17 @@ const Display = (function(){
         projectsBar.appendChild(viewAll)
 
         viewAll.addEventListener('click', () => {
+            inViewAll = true
             clearEntries()
-
-            const everyProject = projectManager.getProjectEntries()
-            for (let i = 0; i < everyProject.length; i++) {
-                console.log(everyProject[i])
-                renderEntries(everyProject[i])
-                
-            }
-
+            viewAllEntries()
         })
     }
 
     function createProject(project){
+
         const projectDisplay = document.createElement('button')
         projectDisplay.classList.add("project")
         projectDisplay.textContent = project.getTitle()
-        console.log(project)
         projectsBar.appendChild(projectDisplay)
         
         projectDisplay.addEventListener('click', () => {
@@ -73,20 +75,40 @@ const Display = (function(){
         })
     }
 
+
     function createEntry(entry){
         const entryBox = document.createElement('div')
         entryBox.classList.add("entry-box")
         entriesBar.appendChild(entryBox)
 
-        const radioLabel = document.createElement('label')
-        console.log(entry)
-        radioLabel.id = entry.getId()
+        const deleteButton = document.createElement('button')
 
-        const entryRadio = document.createElement('input')
-        entryRadio.type = 'checkbox'
-        entryRadio.id = entry.getId()
-        entryBox.appendChild(radioLabel)
-        radioLabel.appendChild(entryRadio)
+        
+        deleteButton.textContent = "➖"
+        deleteButton.id = entry.getId()
+        deleteButton.classList.add('delete-button')
+        entryBox.appendChild(deleteButton)
+
+        deleteButton.addEventListener('click', () => {
+            const allProjects = projectManager.getProjectObjects();
+
+            for (let i = 0; i < allProjects.length; i++) {
+                const allEntries = allProjects[i].getEntries();
+
+                for (let j = 0; j < allEntries.length; j++) {
+                    if (deleteButton.id === allEntries[j].getId()) {
+                        allProjects[i].removeEntry(allEntries[j].getId());
+                        clearEntries();
+                        renderEntries(currentProject.getEntries());
+                        if(inViewAll == false){
+                            createAddEntry()
+                        }
+                        return;
+                        }
+                    }
+                }
+        });
+
 
         const entryContent = document.createElement('div')
         entryContent.classList.add("entry-content")
@@ -105,11 +127,59 @@ const Display = (function(){
         entryDueDate.textContent = entry.getDueDate()
         entryDueDate.classList.add("entry-due-date")
         entryBox.appendChild(entryDueDate)
+
+        const editButton = document.createElement('button')
+        editButton.textContent = "⋮"
+        editButton.id = entry.getId()
+        editButton.classList.add('edit-button')
+        entryBox.appendChild(editButton)
+
+        const editTitle = document.querySelector("#edit-title")
+        const editDescription = document.querySelector("#edit-description")
+        const editDueDate = document.querySelector("#edit-due-date")  
+        const editForm = document.querySelector("#edit-form")
+
+        editButton.addEventListener('click', () => {
+            editModal.showModal()
+            const allProjects = projectManager.getProjectObjects();
+
+            for (let i = 0; i < allProjects.length; i++) {
+                const allEntries = allProjects[i].getEntries();
+
+                for (let j = 0; j < allEntries.length; j++) {
+                    if (deleteButton.id === allEntries[j].getId()) {
+                        editTitle.value = allEntries[j].getTitle()
+                        editDescription.value = allEntries[j].getDescription()
+                        editDueDate.value = allEntries[j].getDueDate()
+                        }
+                    }
+                }
+        })
+
+        editForm.addEventListener('submit', (event) => {
+            event.preventDefault()
+            const allProjects = projectManager.getProjectObjects();
+
+            for (let i = 0; i < allProjects.length; i++) {
+                const allEntries = allProjects[i].getEntries();
+
+                for (let j = 0; j < allEntries.length; j++) {
+                    if (deleteButton.id === allEntries[j].getId()) {
+                            allEntries[j].changeTitle(editTitle.value)
+                            entryTitle.textContent = editTitle.value
+                            editModal.close()
+                        return;
+                        }
+                    }
+                }
+        })
+        
     }   
 
     function createAddEntry(){
         const addMore = document.createElement('button')
         addMore.textContent = "Add Entry"
+        addMore.classList.add("add-entry")
         entriesBar.appendChild(addMore)
 
 
@@ -122,6 +192,7 @@ const Display = (function(){
         
     }   
 
+
     const entryForm = document.querySelector("#entry-form")
         const nameInput = document.querySelector("#entry-title")
         const descriptionInput = document.querySelector("#entry-description")
@@ -129,15 +200,14 @@ const Display = (function(){
         entryForm.addEventListener('submit', (event) => {
             event.preventDefault()
 
-            console.log(dueDateInput.value)
             const newEntry = entryObject(
                 nameInput.value, 
                 descriptionInput.value, 
                 dueDateInput.value)
-
-            console.log(newEntry)
             entryModal.close()
-            
+            nameInput.value = ""
+            descriptionInput.value = ""
+            dueDateInput.value = ""
             currentProject = getCurrentProject()
             currentProject.addEntry(newEntry)
             clearEntries()
@@ -145,44 +215,78 @@ const Display = (function(){
             createAddEntry()
         })
 
+    const projectModal = document.querySelector("#project-modal")
+    const projectInput = document.querySelector("#project-input")
+    const projectForm = document.querySelector("#project-form")
+    
     function createAddProject(){
         const addProject = document.createElement('button')
         addProject.id = "add-project"
         addProject.textContent = "Add Project"
         projectsBar.appendChild(addProject)
+
+        addProject.addEventListener('click', () => {
+            projectModal.showModal()
+        })
+
+        projectForm.addEventListener('submit', (event) => {
+            event.preventDefault()
+            projectModal.close()
+            const newProject = projectObject(projectInput.value)
+            projectManager.addProjectObject(newProject)
+            createProject(newProject)
+            projectInput.value = ""
+            clearProjects()
+            renderProjects()
+        })
+        
     }
 
     function changeCurrentProject(project){
         currentProject = project
+        inViewAll = false
     }
 
     function getCurrentProject(){
         return currentProject
     }
+
+    function projectDisplay(){
+        const h2 = document.querySelector(".h2")
+        if(inViewAll === false){
+            h2.textContent = currentProject.getTitle()
+        }
+        else{
+            h2.textContent = "All Entries"
+        }
+    }
+    
     
 
     return{
         renderProjects,
         renderEntries,
         createAddEntry,
-        getCurrentProject
+        getCurrentProject,
+        viewAllEntries
         
     }
 
 })()
 
-const newProject = createProject("New")
-const entryA = entryObject("wash dishes", "for dad", "tmrw")
+const newProject = projectObject("New")
+const entryA = entryObject("wash dishes", "sink is full", "tmrw")
 newProject.addEntry(entryA)
 
 projectManager.addProjectObject(defaultProject)
 projectManager.addProjectObject(newProject)
 
-Display.renderEntries(defaultProject)
 Display.renderProjects()
 
 
+Display.viewAllEntries()
+
 import { createEntry as entryObject} from "./entries"
 import { projectManager} from "./manage-projects"
-import { createProject } from "./create-project"
+import { createProject as projectObject} from "./create-project"
 import "./styles.css";

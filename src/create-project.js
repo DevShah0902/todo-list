@@ -14,13 +14,22 @@ export function createProject(title, entries = []){
             entries.push(newEntry)
         }
 
+        function removeEntry(id){
+            const indexToRemove = entries.findIndex(entry => entry.getId() === id);
+            if (indexToRemove !== -1) {
+                entries.splice(indexToRemove,1);
+                console.log(indexToRemove)
+             }
+        }
+
         const project = {
             getTitle,
             getEntries,
             addEntry,
+            removeEntry,
         }
 
         return project
     }
 
-import { manageProjects, projectManager } from "./manage-projects"
+import { projectManager } from "./manage-projects"

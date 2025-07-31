@@ -162,6 +162,7 @@ header{
     margin-right:32px;
     font-size:24px;
     font-weight: 800;
+    margin-right: -32px;
 }
 
 
@@ -169,13 +170,21 @@ header{
     text-align: center;
     font-size:40px;
     font-weight: 800;
-    border:3px var(--red);
-    width:300px;
-    height:64px;
-    
 }
 
-.entries button{
+.h2-div{
+    border:3px var(--red);
+    background-color: var(--green);
+    height:80px;
+    width:400px;
+    border:black 4px solid;
+    border-radius: 3px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.entries .add-entry{
     width:250px;
     height:48px;
     color: var(--black);
@@ -186,6 +195,34 @@ header{
     font-weight: 800;
     margin-top:20px;
 }
+
+.entry-box .delete-button{
+    width:45px;
+    height:45px;
+    margin-left: 16px;
+    background-color:var(--red);
+    border: white 3px solid;
+    border-radius: 5px;
+    font-size:20px;
+    text-align: center;
+    font-weight:1000;
+    color:white;
+}
+
+.entry-box .edit-button{
+    width:45px;
+    height:45px;
+    margin-left: 16px;
+    background-color:var(--orange);
+    border: white 3px solid;
+    border-radius: 5px;
+    font-size:20px;
+    text-align: center;
+    font-weight:1000;
+    color:white;
+    margin-right: 16px;
+}
+
 /* FOOTER */
 
 footer{
@@ -251,4 +288,107 @@ footer{
     font-size: 20px;
     font-weight: 800;
     margin-top:150px;
+}
+
+/* EDIT ENTRY MODAL */
+
+#edit-modal{
+    width:500px;
+    height:600px;
+    background-color: var(--dark-gray);
+    color:white;
+    border: var(--green) 5px solid;
+}
+
+#edit-modal legend{
+    font-size:36px;
+    margin-bottom:20px;
+    font-weight: 800;
+}
+
+#edit-modal form{
+    display:flex;
+    flex-direction: column;
+    gap:16px;
+    align-items: center;
+}
+
+#edit-modal label{
+    display:flex;
+    flex-direction: column;
+    font-size:20px;
+    gap:2px;
+    font-weight:800;
+    font-style: italic;
+}
+
+#edit-modal input{
+    width:400px;
+    height:32px;
+    font-size:24px;
+    font-weight:600;
+    border: var(--green) 5px solid;
+    border-radius: 20px;
+}
+
+#edit-modal button{
+    width:250px;
+    height:48px;
+    color: white;
+    background-color: var(--green);
+    border-radius: 32px;
+    border: solid white 4px;
+    font-size: 20px;
+    font-weight: 800;
+    margin-top:150px;
+}
+
+/* PROJECT MODAL */
+
+#project-modal{
+    width:400px;
+    height:200px;
+    background-color: var(--dark-gray);
+    color:white;
+    border: var(--green) 5px solid;
+}
+
+#project-modal form{
+    display:flex;
+    flex-direction: column;
+    gap:16px;
+    align-items: center;
+}
+
+#project-modal label{
+    display:flex;
+    flex-direction: column;
+    font-size:32px;
+    gap:2px;
+    font-weight:800;
+    font-style: italic;
+    text-align: center;
+
+}
+
+#project-modal input{
+    margin-top:20px;
+    width:350px;
+    height:32px;
+    font-size:24px;
+    font-weight:600;
+    border: var(--green) 5px solid;
+    border-radius: 20px;
+}
+
+#project-modal button{
+    width:250px;
+    height:48px;
+    color: white;
+    background-color: var(--green);
+    border-radius: 32px;
+    border: solid white 4px;
+    font-size: 20px;
+    font-weight: 800;
+    margin-top:20px;
 }

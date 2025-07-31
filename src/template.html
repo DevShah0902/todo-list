@@ -18,7 +18,7 @@
                 <div class="projects"></div>
             </div>
             <div class = "entries-bar">
-                <h2>Entries</h2>
+                <h2 class="h2">Entries</h2>
                 <div class="entries"></div>
             </div>
         </div>
@@ -26,11 +26,31 @@
         <dialog id="entry-modal">
             <form action="" id="entry-form">
                 <legend>Enter Entry Information</legend>
-               <label for="entry-title">Task<input type="text" id="entry-title"></label>
-               <label for="entry-description">Description<input type="text" id="entry-description"></label>
+               <label for="entry-title">Task<input type="text" required maxlength = "20" id="entry-title"></label>
+               <label for="entry-description">Description<input type="text" id="entry-description" maxlength="40"></label>
             
-               <label for="entry-due-date">Due Date<input type="date" id="entry-due-date"></label>
+               <label for="entry-due-date">Due Date<input required type="date" id="entry-due-date"></label>
                <button type="submit" id="submit-entry">Add</button>
+            </form>
+        </dialog>
+
+        <dialog id="project-modal">
+            <form action="" id="project-form">
+                <label for="project-input"> Enter Project Name
+                    <input type="text" required id="project-input">
+                </label>
+                <button type="submit">Add Project</button>
+            </form>
+        </dialog>
+
+        <dialog id="edit-modal">
+            <form action="" id="edit-form">
+                <legend>Edit Information</legend>
+               <label for="edit-title">Edit Task<input type="text" required maxlength = "20" id="edit-title"></label>
+               <label for="edit-description">Edit Description<input type="text" id="edit-description" maxlength="40"></label>
+            
+               <label for="edit-due-date">Change Due Date<input required type="date" id="edit-due-date"></label>
+               <button type="submit" id="edit-entry">Update</button>
             </form>
         </dialog>
 

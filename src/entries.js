@@ -16,15 +16,13 @@ export function createEntry(title, description = "", dueDate = "", isCompleted =
     function getIsCompleted(){
         return isCompleted
     }
-
-    function changeIsCompleted(){
-        isCompleted != isCompleted
-    }
-
     function getId(){
         return id
     }
 
+    function changeTitle(newTitle){
+        title = newTitle
+    }
 
     return {
         getTitle,
@@ -32,8 +30,7 @@ export function createEntry(title, description = "", dueDate = "", isCompleted =
         getDueDate,
         getIsCompleted,
         getId,
-        changeIsCompleted,
-
+        changeTitle
     }
 
 }
