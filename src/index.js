@@ -1,14 +1,62 @@
-
-const defaultProject =projectObject("Work")
-
+import { createEntry as entryObject} from "./entries"
+import { projectManager} from "./manage-projects"
+import { createProject as projectObject} from "./create-project"
+import "./styles.css";
+import { getData, setData } from "./save"
 
 const Display = (function(){
     const projectsBar = document.querySelector('.projects')
     const entriesBar = document.querySelector('.entries')
-    let currentProject = defaultProject;
+    let currentProject;
     let inViewAll = true;
     const entryModal = document.querySelector("#entry-modal")
     const editModal = document.querySelector("#edit-modal")
+    const editTitle = document.querySelector("#edit-title")
+    const editDescription = document.querySelector("#edit-description")
+    const editDueDate = document.querySelector("#edit-due-date")  
+    const editForm = document.querySelector("#edit-form")
+    const deleteModal = document.querySelector("#delete-modal")
+    const deleteConfirm = document.querySelector("#delete-confirm")
+    const deleteClose = document.querySelector("#delete-close")
+    let currentEntry;
+    const addProject = document.createElement('button')
+    let dataGot = false
+
+    deleteClose.addEventListener('click', () => {
+        deleteModal.close()
+    })
+
+    deleteConfirm.addEventListener('click', () =>{
+        deleteModal.close()
+        let entryToDelete = document.getElementById(currentEntry.id)
+        if(entryToDelete && entryToDelete.parentNode){
+            entryToDelete.parentNode.removeChild(entryToDelete)
+            currentEntry.id = "deleted"
+        }
+
+        const allProjects = projectManager.getProjectObjects();
+
+            for (let i = 0; i < allProjects.length; i++) {
+                const allEntries = allProjects[i].getEntries();
+
+                for (let j = 0; j < allEntries.length; j++) {
+                    if (currentEntry.id === allEntries[j].getId()) {
+                        allProjects[i].removeEntry(allEntries[j].getId());
+                        clearEntries();
+                        renderEntries(currentProject.getEntries());
+                        if(inViewAll == false){
+                            createAddEntry()
+                        }
+                        return;
+                        }
+                    }
+                }
+
+
+
+
+    })
+
     function renderProjects(){
 
         createViewAll()
@@ -22,8 +70,9 @@ const Display = (function(){
         createAddProject()
     }
 
-    function renderEntries(projectEntries){
+    function renderEntries(project){
         projectDisplay()
+        const projectEntries = project.getEntries()
         for(let i=0; i < projectEntries.length; i++) {
             createEntry(projectEntries[i])
         }
@@ -31,7 +80,8 @@ const Display = (function(){
     }
 
     function viewAllEntries(){
-        const everyProject = projectManager.getProjectEntries()
+        clearEntries()
+        const everyProject = projectManager.getProjectObjects()
             for (let i = 0; i < everyProject.length; i++) {
                 renderEntries(everyProject[i])
                 
@@ -69,43 +119,32 @@ const Display = (function(){
             inViewAll = false
             changeCurrentProject(project)
             clearEntries()
-            renderEntries(project.getEntries())
+            renderEntries(currentProject)
             createAddEntry()
         })
     }
 
 
     function createEntry(entry){
+        if(entry.id === "deleted"){
+
+        }
+        else{
         const entryBox = document.createElement('div')
+        entryBox.id = entry.id
         entryBox.classList.add("entry-box")
         entriesBar.appendChild(entryBox)
 
-        const deleteButton = document.createElement('button')
-
+        const deleteButton = document.createElement("button")
         
         deleteButton.textContent = "➖"
-        deleteButton.id = entry.getId()
+        deleteButton.id = entry.id
         deleteButton.classList.add('delete-button')
         entryBox.appendChild(deleteButton)
 
         deleteButton.addEventListener('click', () => {
-            const allProjects = projectManager.getProjectObjects();
-
-            for (let i = 0; i < allProjects.length; i++) {
-                const allEntries = allProjects[i].getEntries();
-
-                for (let j = 0; j < allEntries.length; j++) {
-                    if (deleteButton.id === allEntries[j].getId()) {
-                        allProjects[i].removeEntry(allEntries[j].getId());
-                        clearEntries();
-                        renderEntries(currentProject.getEntries());
-                        if(inViewAll == false){
-                            createAddEntry()
-                        }
-                        return;
-                        }
-                    }
-                }
+            currentEntry = entry;
+            deleteModal.showModal()
         });
 
 
@@ -133,61 +172,48 @@ const Display = (function(){
         editButton.classList.add('edit-button')
         entryBox.appendChild(editButton)
 
-        const editTitle = document.querySelector("#edit-title")
-        const editDescription = document.querySelector("#edit-description")
-        const editDueDate = document.querySelector("#edit-due-date")  
-        const editForm = document.querySelector("#edit-form")
-
         editButton.addEventListener('click', () => {
+            currentEntry = entry
             editModal.showModal()
-            const allProjects = projectManager.getProjectObjects();
-
-            for (let i = 0; i < allProjects.length; i++) {
-                const allEntries = allProjects[i].getEntries();
-
-                for (let j = 0; j < allEntries.length; j++) {
-                    if (deleteButton.id === allEntries[j].getId()) {
-                        editTitle.value = allEntries[j].getTitle()
-                        editDescription.value = allEntries[j].getDescription()
-                        editDueDate.value = allEntries[j].getDueDate()
-                        }
-                    }
-                }
+            editTitle.value = entry.getTitle()
+            editDescription.value = entry.getDescription()
+            editDueDate.value = entry.getDueDate()
         })
 
-        let currentEntry = entry
+        if(dataGot === true){
+            setData()
+        }
+        }
+        
 
-        editForm.addEventListener('submit', (event) => {
-            event.preventDefault()
-            const allProjects = projectManager.getProjectObjects();
 
-            for (let i = 0; i < allProjects.length; i++) {
-                const allEntries = allProjects[i].getEntries();
-
-                for (let j = 0; j < allEntries.length; j++) {
-                    if (editButton.id === allEntries[j].getId()) {
-                            clearEntries()
-                            console.log(allEntries[j])
-                            console.log(editButton.id)
-                            currentEntry.edit(editTitle.value, editDescription.value, editDueDate.value)
-                            if(inViewAll === false){
-                                inViewAll = false
-                                changeCurrentProject(allProjects[i])
-                                clearEntries()
-                                renderEntries(allProjects[i].getEntries())
-                                createAddEntry()
-                            }
-                            else{
-                                viewAllEntries()
-                            }
-                            editModal.close()
-                        return;
-                        }
-                    }
-                }
-        })
+    
         
     }   
+
+    editForm.addEventListener('submit', (event) => {
+            event.preventDefault()
+            editModal.close()
+            if(!currentEntry) return;
+
+            currentEntry.edit(
+                editTitle.value,
+                editDescription.value,
+                editDueDate.value
+            )
+
+            currentEntry = null;
+
+            clearEntries()
+
+            if (inViewAll === false) {
+            renderEntries(currentProject);
+            createAddEntry();
+            } else {
+            viewAllEntries();
+  }
+            setData()
+        })
 
     function createAddEntry(){
         const addMore = document.createElement('button')
@@ -198,7 +224,6 @@ const Display = (function(){
 
         
         addMore.addEventListener('click',() => {
-    
             entryModal.showModal()
         })
 
@@ -224,7 +249,7 @@ const Display = (function(){
             currentProject = getCurrentProject()
             currentProject.addEntry(newEntry)
             clearEntries()
-            renderEntries(currentProject.getEntries())
+            renderEntries(currentProject)
             createAddEntry()
         })
 
@@ -232,8 +257,21 @@ const Display = (function(){
     const projectInput = document.querySelector("#project-input")
     const projectForm = document.querySelector("#project-form")
     
+    projectForm.addEventListener('submit', (event) => {
+            event.preventDefault()
+            projectModal.close()
+            const newProject = projectObject(projectInput.value)
+            projectManager.addProjectObject(newProject)
+            if(dataGot === true){
+            setData()
+            }
+            createProject(newProject)
+            projectInput.value = ""
+            clearProjects()
+            renderProjects()
+        })
+
     function createAddProject(){
-        const addProject = document.createElement('button')
         addProject.id = "add-project"
         addProject.textContent = "Add Project"
         projectsBar.appendChild(addProject)
@@ -242,16 +280,6 @@ const Display = (function(){
             projectModal.showModal()
         })
 
-        projectForm.addEventListener('submit', (event) => {
-            event.preventDefault()
-            projectModal.close()
-            const newProject = projectObject(projectInput.value)
-            projectManager.addProjectObject(newProject)
-            createProject(newProject)
-            projectInput.value = ""
-            clearProjects()
-            renderProjects()
-        })
         
     }
 
@@ -274,32 +302,53 @@ const Display = (function(){
         }
     }
     
-    
+    function displayData(){
+        const data = null
+        if(!data){
+            const defaultProject = projectObject("Main")
+            projectManager.addProjectObject(defaultProject)
+            currentProject = defaultProject;
+            dataGot = true
+            return
+        }
+
+        data.map(project => {
+            const newProject = projectObject(project[0], project[1])
+            projectManager.addProjectObject(newProject)
+
+            project[1].forEach(entryArr => {
+                const newEntry = entryObject(
+                    entryArr[0], 
+                    entryArr[1],  
+                    entryArr[2],  
+                    false,        
+                );
+                newEntry.changeId(entryArr[3])
+                newProject.addEntry(newEntry);
+                
+            });
+            createProject(newProject)
+        
+        })
+
+        dataGot = true
+    }
 
     return{
         renderProjects,
         renderEntries,
         createAddEntry,
         getCurrentProject,
-        viewAllEntries
+        viewAllEntries,
+        displayData,
+        clearProjects
         
     }
 
 })()
 
-const newProject = projectObject("New")
-const entry1 = entryObject("finish project", "code", "2009-12-08")
-newProject.addEntry(entry1)
-
-projectManager.addProjectObject(defaultProject)
-projectManager.addProjectObject(newProject)
-
+Display.displayData()
+Display.clearProjects()
 Display.renderProjects()
-
-
 Display.viewAllEntries()
 
-import { createEntry as entryObject} from "./entries"
-import { projectManager} from "./manage-projects"
-import { createProject as projectObject} from "./create-project"
-import "./styles.css";

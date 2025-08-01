@@ -27,7 +27,11 @@ export function createEntry(title, description = "", dueDate = "", isCompleted =
     function edit(newTitle, newDescription, newDate){
         title = newTitle
         description = newDescription
-        newDate = newDate
+        dueDate = newDate
+    }
+
+    function changeId(newId){
+        id = newId
     }
 
     return {
@@ -37,7 +41,8 @@ export function createEntry(title, description = "", dueDate = "", isCompleted =
         getIsCompleted,
         getId,
         changeTitle,
-        edit
+        edit,
+        changeId,
     }
 
 }

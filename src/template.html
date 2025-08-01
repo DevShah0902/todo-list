@@ -49,9 +49,18 @@
                <label for="edit-title">Edit Task<input type="text" required maxlength = "20" id="edit-title"></label>
                <label for="edit-description">Edit Description<input type="text" id="edit-description" maxlength="40"></label>
             
-               <label for="edit-due-date">Change Due Date<input required type="date" id="edit-due-date"></label>
+               <label for="edit-due-date">Change Due Date<input type="date" id="edit-due-date"></label>
                <button type="submit" id="edit-entry">Update</button>
             </form>
+        </dialog>
+
+        <dialog id="delete-modal">
+            <p>Are you sure you want to delete the entry?</p>
+            <div>
+                <button id="delete-confirm">Delete</button>
+                <button id="delete-close">Close</button>
+            </div>
+            
         </dialog>
 
         </div>

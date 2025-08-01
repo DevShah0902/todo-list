@@ -343,6 +343,45 @@ footer{
     margin-top:150px;
 }
 
+/* DELETE MODAL */
+
+#delete-modal{
+    width:400px;
+    height:250px;
+    background-color: var(--dark-gray);
+    color:white;
+    border: var(--green) 5px solid;
+}
+#delete-modal p{
+    display:flex;
+    flex-direction: column;
+    font-size:32px;
+    gap:5px;
+    font-weight:800;
+    font-style: italic;
+    text-align: center;
+
+}
+
+#delete-modal div{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    gap:10px;
+}
+
+#delete-modal button{
+    width:180px;
+    height:48px;
+    color: white;
+    background-color: var(--green);
+    border-radius: 32px;
+    border: solid white 4px;
+    font-size: 20px;
+    font-weight: 800;
+    margin-top:20px;
+}
+
 /* PROJECT MODAL */
 
 #project-modal{

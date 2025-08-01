@@ -9,7 +9,7 @@ const projectManager = function manageProjects() {
     }
 
     function getProjectEntries(){
-        return projectEntries
+        return projectObjects.map(project => project.getEntries())
     }
 
     function addProject(title){
