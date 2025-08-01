@@ -24,13 +24,20 @@ export function createEntry(title, description = "", dueDate = "", isCompleted =
         title = newTitle
     }
 
+    function edit(newTitle, newDescription, newDate){
+        title = newTitle
+        description = newDescription
+        newDate = newDate
+    }
+
     return {
         getTitle,
         getDescription,
         getDueDate,
         getIsCompleted,
         getId,
-        changeTitle
+        changeTitle,
+        edit
     }
 
 }

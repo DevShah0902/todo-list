@@ -1,7 +1,5 @@
 
 const defaultProject =projectObject("Work")
-const entry1 = entryObject("finish project", "code", "1/23/43")
-
 
 
 const Display = (function(){
@@ -68,6 +66,7 @@ const Display = (function(){
         projectsBar.appendChild(projectDisplay)
         
         projectDisplay.addEventListener('click', () => {
+            inViewAll = false
             changeCurrentProject(project)
             clearEntries()
             renderEntries(project.getEntries())
@@ -156,6 +155,8 @@ const Display = (function(){
                 }
         })
 
+        let currentEntry = entry
+
         editForm.addEventListener('submit', (event) => {
             event.preventDefault()
             const allProjects = projectManager.getProjectObjects();
@@ -164,9 +165,21 @@ const Display = (function(){
                 const allEntries = allProjects[i].getEntries();
 
                 for (let j = 0; j < allEntries.length; j++) {
-                    if (deleteButton.id === allEntries[j].getId()) {
-                            allEntries[j].changeTitle(editTitle.value)
-                            entryTitle.textContent = editTitle.value
+                    if (editButton.id === allEntries[j].getId()) {
+                            clearEntries()
+                            console.log(allEntries[j])
+                            console.log(editButton.id)
+                            currentEntry.edit(editTitle.value, editDescription.value, editDueDate.value)
+                            if(inViewAll === false){
+                                inViewAll = false
+                                changeCurrentProject(allProjects[i])
+                                clearEntries()
+                                renderEntries(allProjects[i].getEntries())
+                                createAddEntry()
+                            }
+                            else{
+                                viewAllEntries()
+                            }
                             editModal.close()
                         return;
                         }
@@ -275,8 +288,8 @@ const Display = (function(){
 })()
 
 const newProject = projectObject("New")
-const entryA = entryObject("wash dishes", "sink is full", "tmrw")
-newProject.addEntry(entryA)
+const entry1 = entryObject("finish project", "code", "2009-12-08")
+newProject.addEntry(entry1)
 
 projectManager.addProjectObject(defaultProject)
 projectManager.addProjectObject(newProject)
